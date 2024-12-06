@@ -1,0 +1,30 @@
+{{ 'section-lookbook.css' | asset_url | stylesheet_tag }}
+
+{% assign look_book_metaobject = shop.metaobjects['look_book'][section.settings.metaobject_reference] %}
+<div class="section-lookbook page-width">
+    <h1>{{ look_book_metaobject.title.value }}</h1>
+    <div class="grid grid--4-col-desktop grid--2-col-tablet-down">
+        {% for product in look_book_metaobject.products.value %}
+            <div class="grid__item">
+                <img src="{{ product.featured_image |  image_url: width: 400 }}" alt="{{ product.title }}" width="400" height="600">
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% schema %}
+{
+    "name": "Look Book",
+    "settings": [
+        {
+            "type": "text",
+            "id": "metaobject_reference",
+            "label": "Lookbook handle"
+        }
+    ],
+    "presets": [
+        {
+            "name": "Look Book"
+        }
+    ]
+}
+{% endschema %}
