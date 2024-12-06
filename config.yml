@@ -1,0 +1,7 @@
+development:
+  password: shptka_7ec8f7d233d32bd76eede2030c1bc0bb
+  theme_id: "145553031398"
+  store: albertjadebuniel.myshopify.com
+  ignore_files:
+  - config/settings_data.json
+  - templates/*.json
