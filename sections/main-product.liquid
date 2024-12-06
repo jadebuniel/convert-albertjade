@@ -1,3 +1,16 @@
+{% comment %} Check if product is included in the metaobject products list. If so, save metaobject handle in to an array. {% endcomment %}
+{% liquid
+  assign look_book_metaobjects = shop.metaobjects['look_book']
+  assign look_books_to_show = '' | split: ','
+  for entry in look_book_metaobjects.values
+    assign check_product = entry.products.value | where: 'id', product.id | first
+    if check_product != blank
+      assign entry_handle = entry.system.handle | split: ','
+      assign look_books_to_show = look_books_to_show | concat: entry_handle
+    endif
+  endfor
+%}
+
 <section
   id="MainProduct-{{ section.id }}"
   class="page-width section-{{ section.id }}-padding"
@@ -570,6 +583,26 @@
   </script>
   <script src="{{ 'selling-plans.js' | asset_url }}" defer="defer"></script>
   {% comment %}<script src="{{ 'selling-plan-docs.js' | asset_url }}" defer="defer"></script>{% endcomment %}
+  {% comment %} Only show lookbook section if there are look books to be shown. {% endcomment %}
+  {% if look_books_to_show.size > 0 %}
+    <div class="page-width lookbook">
+      <h1 class="center">Lookbooks</h1>
+      {% for entry_handle in look_books_to_show %}
+        <div>
+          {% comment %} Reference the array made above with the handles of the look books to show. {% endcomment %}
+          {% assign look_book_metaobject = look_book_metaobjects[entry_handle] %}
+          <h1>{{ look_book_metaobject.title.value }}</h1>
+          <div class="grid grid--4-col-desktop grid--2-col-tablet-down">
+              {% for product_reference in look_book_metaobject.products.value %}
+                  <div class="grid__item">
+                      <img src="{{ product_reference.featured_image |  image_url: width: 400 }}" alt="{{ product_reference.title }}" width="400" height="600">
+                  </div>
+              {% endfor %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
 </section>
 
 {% schema %}
